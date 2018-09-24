@@ -31,9 +31,8 @@ Bajar_Precios <- function(Columns, Tickers, Fecha_In, Fecha_Fn) {
 }
 
 
-tk<-(read.xlsx("C:/Users/javi__000/Documents/ITESO/Trading/Laboratorio2/IAK.xlsx", sheetName="Holdings",
-               colIndex=1,startRow=10,endRow=66,header=TRUE))
-#tk<- read_excel("C:/Users/perezka/OneDrive - HP/Karla/Karla/Trading/myst_lab2_KarlaPerez/Etf_data.xlsx", sheet = 1, col_names = TRUE, col_types = NULL, na = "", skip = 0)
+tk<-(read.xlsx("C:/Users/javi__000/Documents/ITESO/Trading/Laboratorio2/IVV.xlsx", sheetName="Holdings",
+               colIndex=1,startRow=9,endRow=65,header=TRUE))
 
 tkt_1<-as.character(tk[,1])
 
@@ -131,13 +130,13 @@ Regla5_K <- 1000000 #Capital inicial
 # -- ----------------------------------------------------------------------------------------- -- #
 
 # -- Calcular los Titulos de posicion inicial
-Historico$Titulos[1] <- (Regla5_K*Regla1_I)%/%Historico$Precio[1]
+Historico$Titulos[1] <- (Regla5_K*Regla1_I)%/%Historico$Precios[1]
 
 # -- Se calculan comisiones iniciales
-Historico$Comisiones[1] <- Historico$Titulos[1]*Historico$Precio[1]*Regla4_C
+Historico$Comisiones[1] <- Historico$Titulos[1]*Historico$Precios[1]*Regla4_C
 
 # -- Calcular el Balance
-Historico$Balance[1] <- Historico$Titulos[1]*Historico$Precio[1]
+Historico$Balance[1] <- Historico$Titulos[1]*Historico$Precios[1]
 
 # -- Todo remanente se dejar? registrado en la cuenta de efectivo.
 Historico$Capital[1] <- Regla5_K-Historico$Balance[1]-Historico$Comisiones[1]
@@ -152,11 +151,11 @@ Historico$R_Cuenta[1] <- 0
 Historico$Mensaje[1] <- "Inicializacion de cartera"
 
 # -- Calcular R_Precio
-Historico$R_Precio <- round(c(0, diff(log(Historico$Precio))),4)
+Historico$R_Precio <- round(c(0, diff(log(Historico$Precios))),4)
 
 # -- Calcular R_Activo
 for(i in 1:length(Historico$Date)){
-  Historico$R_Activo[i] <- round((Historico$Precio[i]/Historico$Precio[1])-1,2)
+  Historico$R_Activo[i] <- round((Historico$Precios[i]/Historico$Precios[1])-1,2)
 }
 
 # -- ------------------------------------ -- #
@@ -172,10 +171,10 @@ for(i in 2:length(Historico$Date)){
     
     if(Historico$Capital[i] > 0){ # Si hay capital
       
-      if(Historico$Capital[i]*Regla2_P > Historico$Precio[i]){ # Si Capital minimo
+      if(Historico$Capital[i]*Regla2_P > Historico$Precios[i]){ # Si Capital minimo
         
         Historico$Operacion[i] <- "Compra"
-        Historico$Titulos[i]   <- (Historico$Capital[i]*Regla2_P)%/%Historico$Precio[i]
+        Historico$Titulos[i]   <- (Historico$Capital[i]*Regla2_P)%/%Historico$Precios[i]
         
         compra <- Historico$Precio[i]*Historico$Titulos[i]  
         Historico$Comisiones[i] <- compra*Regla4_C
